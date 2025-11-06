@@ -1,0 +1,49 @@
+# Secrets
+api_key.txt
+
+# Virtual environments
+openvino_env/
+.venv/
+venv/
+env/
+
+# Python caches
+__pycache__/
+*.pyc
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+
+# Evidence and exports (do not upload)
+files/
+exports/
+Combined_*.pdf
+Prompt_Packet_*.txt
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+
+# Index/compiled artifacts
+compiled_index.txt
+
+# Legacy/worker/unused scripts
+SAFE MODE/
+White_Magic.py
+White_Magic_PRO.py
+Amagic.py
+BLck mgcc Pro.py
+WHITE_MAGIC_PLAN.*
+import tkinter as tk.py
+1.py
+5.py
+evidence_cards.py.py
+evidence-card_v2.py
+
+# Prompt backups and alternates (exclude), but keep canonical
+PROMPT_REVISED*.txt
+SAFE MODE/**/PROMPT_REVISED.txt
+!/prompt_revised.txt
+!/templates/prompt_revised.txt

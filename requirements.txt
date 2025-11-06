@@ -1,0 +1,5 @@
+# Requirements for Evidence Card System
+google-generativeai>=0.8.0
+SpeechRecognition>=3.10.0
+pyaudio>=0.2.11
+requests>=2.31.0

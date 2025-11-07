@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floating Glass Dual Model Chat</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="floating-chat-container">
+        <!-- Header with Model Toggle -->
+        <div class="chat-header">
+            <h2>Dual Model Chat</h2>
+            <div class="model-toggle">
+                <label class="toggle-label">
+                    <input type="checkbox" id="dualModelToggle" checked>
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-text">
+                        <span class="single-text">Single Model</span>
+                        <span class="dual-text">Dual Model</span>
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Model Configuration -->
+        <div class="model-config">
+            <div class="model-card" id="model1Card">
+                <h3>Model 1</h3>
+                <input type="text" id="model1Name" placeholder="Model 1 Name" value="Claude Alpha">
+                <label>
+                    <input type="checkbox" id="model1Active" checked>
+                    Active
+                </label>
+            </div>
+            <div class="model-card" id="model2Card">
+                <h3>Model 2</h3>
+                <input type="text" id="model2Name" placeholder="Model 2 Name" value="Claude Beta">
+                <label>
+                    <input type="checkbox" id="model2Active" checked>
+                    Active
+                </label>
+            </div>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="welcome-message">
+                <p>Welcome to the Dual Model Chat!</p>
+                <p>Toggle between single and dual model mode above.</p>
+            </div>
+        </div>
+
+        <!-- Structured Output Display -->
+        <div class="structured-output" id="structuredOutput">
+            <div class="output-section">
+                <h4>Latest Structured Outputs</h4>
+                <div id="outputDisplay"></div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="chat-input">
+            <textarea id="userInput" placeholder="Type your message here..." rows="3"></textarea>
+            <div class="input-controls">
+                <button id="sendButton" class="send-btn">Send</button>
+                <button id="clearButton" class="clear-btn">Clear Chat</button>
+                <button id="exportButton" class="export-btn">Export Data</button>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar" id="statusBar">
+            <span id="statusText">Ready</span>
+            <span id="messageCount">Messages: 0</span>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

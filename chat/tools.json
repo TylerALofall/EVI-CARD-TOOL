@@ -1,0 +1,213 @@
+{
+  "tools": [
+    {
+      "name": "note_me",
+      "description": "Write a note to yourself for internal tracking and memory",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "The content of your internal note"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "description": "Priority level of this note"
+          }
+        },
+        "required": ["content", "priority"]
+      }
+    },
+    {
+      "name": "store_memory",
+      "description": "Store something in your memory (short-term or long-term)",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Identifier for this memory"
+          },
+          "value": {
+            "type": "string",
+            "description": "The memory content"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["short_term", "long_term"],
+            "description": "Memory duration type"
+          },
+          "importance": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 10,
+            "description": "How important is this memory (0-10)"
+          }
+        },
+        "required": ["key", "value", "type"]
+      }
+    },
+    {
+      "name": "plan_next_action",
+      "description": "Plan your next action and send a message to yourself to continue your turn",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "The action you plan to take"
+          },
+          "reasoning": {
+            "type": "string",
+            "description": "Why you're taking this action"
+          },
+          "self_prompt": {
+            "type": "string",
+            "description": "A message to send back to yourself to continue thinking. Leave empty to end your turn."
+          }
+        },
+        "required": ["action", "reasoning", "self_prompt"]
+      }
+    },
+    {
+      "name": "send_to_self",
+      "description": "Send a message directly to yourself to continue your internal reasoning chain",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "The message you want to send to yourself"
+          },
+          "context": {
+            "type": "string",
+            "description": "Context about why you're messaging yourself"
+          }
+        },
+        "required": ["message"]
+      }
+    },
+    {
+      "name": "execute_command",
+      "description": "Execute a shell command on the system. Use with caution.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "The command to execute (e.g., 'ls -la', 'node script.js')"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Why you need to execute this command"
+          },
+          "working_directory": {
+            "type": "string",
+            "description": "Directory to run the command in (optional)"
+          }
+        },
+        "required": ["command", "reason"]
+      }
+    },
+    {
+      "name": "list_my_tools",
+      "description": "Get a list of all tools available to you",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["all", "memory", "communication", "execution", "planning"],
+            "description": "Filter tools by category"
+          }
+        }
+      }
+    },
+    {
+      "name": "read_my_notes",
+      "description": "Read your previous notes to yourself",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "filter": {
+            "type": "string",
+            "description": "Optional filter for note content"
+          },
+          "limit": {
+            "type": "number",
+            "description": "Maximum number of notes to return"
+          }
+        }
+      }
+    },
+    {
+      "name": "read_my_memory",
+      "description": "Retrieve memories you've stored previously",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Specific memory key to retrieve (optional)"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["short_term", "long_term", "all"],
+            "description": "Type of memories to retrieve"
+          },
+          "limit": {
+            "type": "number",
+            "description": "Maximum number of memories to return"
+          }
+        }
+      }
+    },
+    {
+      "name": "write_file",
+      "description": "Write content to a file",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "File path to write to"
+          },
+          "content": {
+            "type": "string",
+            "description": "Content to write"
+          },
+          "mode": {
+            "type": "string",
+            "enum": ["write", "append"],
+            "description": "Write mode - overwrite or append"
+          }
+        },
+        "required": ["path", "content"]
+      }
+    },
+    {
+      "name": "read_file",
+      "description": "Read content from a file",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "File path to read from"
+          }
+        },
+        "required": ["path"]
+      }
+    }
+  ],
+
+  "tool_categories": {
+    "memory": ["note_me", "store_memory", "read_my_notes", "read_my_memory"],
+    "communication": ["send_to_self", "plan_next_action"],
+    "execution": ["execute_command", "write_file", "read_file"],
+    "planning": ["plan_next_action", "list_my_tools"]
+  },
+
+  "system_prompt": "You have access to a set of tools that allow you to:\n1. Take notes and store memories\n2. Send messages to yourself to continue reasoning\n3. Execute commands and interact with files\n4. Plan your actions and self-prompt\n\nUse 'list_my_tools' to see all available tools at any time.\nUse 'send_to_self' to continue your turn and keep thinking.\nUse structured outputs (note_me, memory, next_action) after each response."
+}

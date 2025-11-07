@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs').promises;
 const path = require('path');
+const ToolExecutor = require('./tool-executor');
 
 const app = express();
 const PORT = 3000;
@@ -16,6 +17,9 @@ const NOTES_DIR = path.join(__dirname, 'notes');
 const MEMORY_DIR = path.join(__dirname, 'memory');
 const EXPORTS_DIR = path.join(__dirname, 'exports');
 
+// Initialize tool executor
+let toolExecutor;
+
 // Ensure directories exist
 async function initDirectories() {
     const dirs = [NOTES_DIR, MEMORY_DIR, EXPORTS_DIR];
@@ -27,6 +31,10 @@ async function initDirectories() {
             console.error(`Error creating directory ${dir}:`, error);
         }
     }
+
+    // Initialize tool executor
+    toolExecutor = new ToolExecutor(NOTES_DIR, MEMORY_DIR);
+    console.log('✓ Tool executor initialized');
 }
 
 // Helper function to generate filename
@@ -260,6 +268,84 @@ app.get('/schemas', async (req, res) => {
     }
 });
 
+// Execute tool
+app.post('/execute-tool', async (req, res) => {
+    try {
+        const { toolName, parameters, modelNum, modelName } = req.body;
+
+        if (!toolExecutor) {
+            return res.status(500).json({
+                success: false,
+                error: 'Tool executor not initialized'
+            });
+        }
+
+        const result = await toolExecutor.executeTool(
+            toolName,
+            parameters,
+            modelNum,
+            modelName
+        );
+
+        res.json(result);
+
+    } catch (error) {
+        console.error('Error executing tool:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// Get available tools
+app.get('/tools', (req, res) => {
+    try {
+        const toolsPath = path.join(__dirname, 'tools.json');
+        const toolsData = require(toolsPath);
+
+        res.json({
+            success: true,
+            tools: toolsData.tools,
+            categories: toolsData.tool_categories,
+            system_prompt: toolsData.system_prompt
+        });
+    } catch (error) {
+        console.error('Error reading tools:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// Chat endpoint with tool support
+app.post('/chat', async (req, res) => {
+    try {
+        const { message, modelNum, modelName, conversationHistory } = req.body;
+
+        // This is where you would integrate with a real AI model
+        // For now, return the system prompt and available tools
+        const toolsPath = path.join(__dirname, 'tools.json');
+        const toolsData = require(toolsPath);
+
+        res.json({
+            success: true,
+            message: 'To integrate with real AI models, see INTEGRATION.md',
+            system_prompt: toolsData.system_prompt,
+            available_tools: toolsData.tools,
+            conversation_id: `conv_${Date.now()}_model${modelNum}`
+        });
+
+    } catch (error) {
+        console.error('Error in chat endpoint:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
 // Health check
 app.get('/health', (req, res) => {
     res.json({
@@ -275,18 +361,21 @@ async function startServer() {
 
     app.listen(PORT, () => {
         console.log(`
-╔════════════════════════════════════════╗
-║  Dual Model Chat Server                ║
-║  Running on http://localhost:${PORT}    ║
-║                                        ║
-║  Endpoints:                            ║
-║  - POST /save-output                   ║
-║  - POST /export                        ║
-║  - GET  /notes                         ║
-║  - GET  /memory                        ║
-║  - GET  /schemas                       ║
-║  - GET  /health                        ║
-╚════════════════════════════════════════╝
+╔═══════════════════════════════════════════════╗
+║  Dual Model Chat Server with Tools           ║
+║  Running on http://localhost:${PORT}           ║
+║                                               ║
+║  Endpoints:                                   ║
+║  - POST /chat              Chat with AI       ║
+║  - POST /execute-tool      Execute tools      ║
+║  - GET  /tools             List all tools     ║
+║  - POST /save-output       Save outputs       ║
+║  - POST /export            Export data        ║
+║  - GET  /notes             Get notes          ║
+║  - GET  /memory            Get memories       ║
+║  - GET  /schemas           Get schemas        ║
+║  - GET  /health            Health check       ║
+╚═══════════════════════════════════════════════╝
         `);
     });
 }

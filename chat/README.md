@@ -6,6 +6,11 @@ A beautiful, modern chat interface with dual AI model support, structured output
 
 - 🎨 **Floating Glass UI**: Modern glassmorphism design with smooth animations
 - 🤖 **Dual Model Support**: Run one or two AI models simultaneously
+- 🛠️ **10 Built-in Tools**: Models can use tools to think, remember, and act:
+  - Memory & Notes: `note_me`, `store_memory`, `read_my_notes`, `read_my_memory`
+  - Self-Messaging: `send_to_self`, `plan_next_action`
+  - Execution: `execute_command`, `write_file`, `read_file`
+  - Discovery: `list_my_tools`
 - 📊 **Structured Outputs**: Models generate structured JSON outputs including:
   - `note_me`: Internal notes the model writes to itself
   - `memory`: Short-term and long-term memory storage
@@ -13,17 +18,24 @@ A beautiful, modern chat interface with dual AI model support, structured output
 - 💾 **File Persistence**: All outputs are saved to organized text files
 - 🔄 **Self-Prompting**: Models can send messages back to themselves to continue their turn
 - 📤 **Export System**: Export complete chat history and structured data
+- 🧪 **Tools Demo Interface**: Test all tools with a visual interface
 
 ## Directory Structure
 
 ```
 chat/
 ├── index.html          # Main chat interface
+├── tools-demo.html     # Tool testing interface
 ├── styles.css          # Floating glass styling
 ├── app.js             # Frontend logic
 ├── server.js          # Backend API server
+├── tool-executor.js    # Tool execution engine
 ├── package.json       # Node.js dependencies
 ├── schemas.json       # JSON schemas for structured outputs
+├── tools.json         # Tool definitions for models
+├── README.md          # This file
+├── INTEGRATION.md     # AI model integration guide
+├── HOW_MODELS_WORK.md # How models use tools
 ├── notes/            # Directory for note_me and actions
 ├── memory/           # Directory for short and long-term memory
 └── exports/          # Directory for exported data
@@ -175,6 +187,54 @@ async processWithModel(modelNum, userMessage) {
     // Process result...
 }
 ```
+
+## Testing Model Tools
+
+The system includes a dedicated interface for testing all model tools:
+
+1. **Start the server:**
+   ```bash
+   npm start
+   ```
+
+2. **Open the tools demo:**
+   ```
+   http://localhost:3000/tools-demo.html
+   ```
+
+3. **Test each tool:**
+   - Select Model 1 or Model 2
+   - Fill in parameters for any tool
+   - Click "Test Tool" to execute
+   - View results in real-time
+
+**Available for testing:**
+- `note_me` - Write notes to yourself
+- `store_memory` - Save memories
+- `send_to_self` - Message yourself
+- `execute_command` - Run shell commands
+- `list_my_tools` - See all available tools
+- And 5 more...
+
+**Command-line testing:**
+```bash
+# List all tools
+curl http://localhost:3000/tools
+
+# Execute a tool
+curl -X POST http://localhost:3000/execute-tool \
+  -H "Content-Type: application/json" \
+  -d '{
+    "toolName": "send_to_self",
+    "parameters": {
+      "message": "Testing self-messaging!"
+    },
+    "modelNum": 1,
+    "modelName": "Test"
+  }'
+```
+
+See `HOW_MODELS_WORK.md` for complete documentation on how models use these tools.
 
 ## Browser Compatibility
 
